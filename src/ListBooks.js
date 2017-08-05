@@ -12,7 +12,6 @@ class ListBooks extends React.Component {
 
   componentDidMount(){
     BooksAPI.getAll().then(data => {
-      console.log(data);
       this.setState({
         books: data
       });
@@ -20,15 +19,9 @@ class ListBooks extends React.Component {
   }
 
   handleChangeShelf(bookId:string,e:any){
-    console.log(bookId);
-    console.log(e.target.value);
     let temp = this.state.books;
-    for(let i=0; i<temp.length; i++){
-      if(temp[i].id===bookId){
-        console.log('updating id');
-        temp[i].shelf = e.target.value;
-      }
-    }
+    const book = temp.filter(t => t.id === bookId)[0];
+    book.shelf = e.target.value;
     this.setState({
       books: temp
     })
@@ -80,7 +73,7 @@ class ListBooks extends React.Component {
                         <div className="book-top">
                           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+book.imageLinks.thumbnail+')' }}></div>
                           <div className="book-shelf-changer">
-                            <select>
+                            <select value={book.shelf} onChange={(e)=>this.handleChangeShelf(book.id,e)}>
                               <option value="none" disabled>Move to...</option>
                               <option value="currentlyReading">Currently Reading</option>
                               <option value="wantToRead">Want to Read</option>
@@ -109,7 +102,7 @@ class ListBooks extends React.Component {
                         <div className="book-top">
                           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+book.imageLinks.thumbnail+')' }}></div>
                           <div className="book-shelf-changer">
-                            <select>
+                            <select value={book.shelf} onChange={(e)=>this.handleChangeShelf(book.id,e)}>
                               <option value="none" disabled>Move to...</option>
                               <option value="currentlyReading">Currently Reading</option>
                               <option value="wantToRead">Want to Read</option>
