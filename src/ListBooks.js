@@ -22,9 +22,11 @@ class ListBooks extends React.Component {
     let temp = this.state.books;
     const book = temp.filter(t => t.id === bookId)[0];
     book.shelf = e.target.value;
-    this.setState({
-      books: temp
-    })
+    BooksAPI.update(book,e.target.value).then((response)=>{
+      this.setState({
+        books: temp
+      })
+    });
   }
 
   render(){
