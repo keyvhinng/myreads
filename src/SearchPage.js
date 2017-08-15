@@ -36,10 +36,18 @@ class SearchPage extends React.Component {
   };
 
   updateBooks(books: any) {
-    const verifiedBooks = books.forEach(book => {
-      console.log(book);
+    const verifiedBooks = books.map(book => {
+      book.shelf = "none";
+      this.props.booksOnShelf.forEach(bookOnShelf => {
+        if (book.id === bookOnShelf.id) {
+          book.shelf = bookOnShelf.shelf;
+        }
+      });
+      return book;
     });
-    console.log(verifiedBooks);
+    this.setState({
+      books: verifiedBooks
+    });
   }
 
   fireSearchBook(query: string) {
@@ -50,9 +58,7 @@ class SearchPage extends React.Component {
             books: []
           });
         } else {
-          this.setState({
-            books: response
-          });
+          this.updateBooks(response);
         }
       },
       error => {
@@ -61,21 +67,7 @@ class SearchPage extends React.Component {
     );
   }
 
-  handleChangeShelf(bookId: string, e: any) {
-    let temp = this.state.books;
-    const book = temp.filter(t => t.id === bookId)[0];
-    book.shelf = e.target.value;
-    BooksAPI.update(book, e.target.value).then(response => {
-      this.setState({
-        books: temp
-      });
-    });
-  }
-
   render() {
-    this.state.books.forEach(book => {
-      console.log(book);
-    });
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -104,11 +96,14 @@ class SearchPage extends React.Component {
                       backgroundImage: "url(" + book.imageLinks.thumbnail + ")"
                     }}
                   />
+                  <h3>
+                    {book.shelf}
+                  </h3>
                   <div className="book-shelf-changer">
-                    <h3>
-                      {book.shelf}
-                    </h3>
-                    <select value={book.shelf} onChange={e => this.handleChangeShelf(book.id, e)}>
+                    <select
+                      value={book.shelf}
+                      onChange={e => this.props.onChangeShelf(book.id, e.target.value)}
+                    >
                       <option value="none" disabled>
                         Move to...
                       </option>

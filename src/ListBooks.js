@@ -8,20 +8,10 @@ import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 
 class ListBooks extends React.Component {
-  state = {
-    books: []
-  };
-
-  componentDidMount() {
-    BooksAPI.getAll().then(data => {
-      this.setState({
-        books: data
-      });
-    });
-  }
+  state = {};
 
   handleChangeShelf = (bookId: string, e: any) => {
-    let temp = this.state.books;
+    let temp = this.props.booksOnShelf;
     const book = temp.filter(t => t.id === bookId)[0];
     book.shelf = e.target.value;
     BooksAPI.update(book, e.target.value).then(response => {
@@ -40,19 +30,19 @@ class ListBooks extends React.Component {
         <div className="list-books-content">
           <BookShelf
             key="currently"
-            books={this.state.books.filter(book => book.shelf === "currentlyReading")}
+            books={this.props.booksOnShelf.filter(book => book.shelf === "currentlyReading")}
             onChangeShelf={this.handleChangeShelf}
             shelftitle="Currently Reading"
           />
           <BookShelf
             key="wantToRead"
-            books={this.state.books.filter(book => book.shelf === "wantToRead")}
+            books={this.props.booksOnShelf.filter(book => book.shelf === "wantToRead")}
             onChangeShelf={this.handleChangeShelf}
             shelftitle="Want to Read"
           />
           <BookShelf
             key="read"
-            books={this.state.books.filter(book => book.shelf === "read")}
+            books={this.props.booksOnShelf.filter(book => book.shelf === "read")}
             onChangeShelf={this.handleChangeShelf}
             shelftitle="Read"
           />
