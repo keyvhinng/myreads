@@ -67,6 +67,16 @@ class SearchPage extends React.Component {
     );
   }
 
+  updateBookOnSearch(book: any, shelf: string) {
+    let temp = this.state.books;
+    const bookToUpdate = temp.filter(t => t.id === book.id)[0];
+    bookToUpdate.shelf = shelf;
+    this.setState({
+      books: temp
+    });
+    this.props.onChangeShelf(book, shelf);
+  }
+
   render() {
     return (
       <div className="search-books">
@@ -96,13 +106,12 @@ class SearchPage extends React.Component {
                       backgroundImage: "url(" + book.imageLinks.thumbnail + ")"
                     }}
                   />
-                  <h3>
-                    {book.shelf}
-                  </h3>
                   <div className="book-shelf-changer">
                     <select
                       value={book.shelf}
-                      onChange={e => this.props.onChangeShelf(book.id, e.target.value)}
+                      onChange={e => {
+                        this.updateBookOnSearch(book, e.target.value);
+                      }}
                     >
                       <option value="none" disabled>
                         Move to...

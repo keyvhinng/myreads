@@ -20,16 +20,19 @@ class BooksApp extends React.Component {
     });
   }
 
-  handleChangeShelf = (bookId: string, shelf: any) => {
-    let temp = this.state.books;
-    const book = temp.filter(t => t.id === bookId)[0];
-    book.shelf = shelf;
+  handleChangeShelf = (book: any, shelf: string) => {
     BooksAPI.update(book, shelf).then(response => {
-      this.setState({
-        books: temp
-      });
+      this.getBooksOnShelf();
     });
   };
+
+  getBooksOnShelf() {
+    BooksAPI.getAll().then(data => {
+      this.setState({
+        books: data
+      });
+    });
+  }
 
   render() {
     return (
